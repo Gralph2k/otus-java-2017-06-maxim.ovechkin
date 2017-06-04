@@ -1,2 +1,10 @@
 # otus-java-2017-06-maxim.ovechkin
-OTUS Java learning course
+Примеры для курса "Разработчик Java" в Otus.ru
+
+Группа 2017-06
+
+Автор
+
+Maxim Ovechkin (Максим Овечкин)
+
+JavaEmail@yandex.ru
