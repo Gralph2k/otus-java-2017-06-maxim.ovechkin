@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
  * Created by maxim.ovechkin on 04.06.2017.
  * home work 1.1
  */
-public class Application {
+public class Main {
     public static void main(String[] args) {
-        for (String line:readCSV("pom.xml")) {
+        for (String line:readCSV("import.csv")) {
             System.out.println(line);
         };
     }
@@ -21,7 +21,6 @@ public class Application {
     public static List<String> readCSV(String path) {
         try {
             System.out.println("Reading from: " + path);
-
             CSVReader reader = new CSVReader(new FileReader(path));
             return reader.readAll().stream().map(line -> line[0].trim()).collect(Collectors.toList());
         } catch (IOException e) {
