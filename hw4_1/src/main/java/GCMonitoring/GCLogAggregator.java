@@ -28,7 +28,15 @@ class GCLogAggregator {
            gcLogAggregatorItems.add(item);
         }
         item.aggregateLog(durationMs);
-        logger.info("name:{}\ttype:{}\tduration:{} ms   \t total run count:{}\t Avg duration:{}ms ", item.getName(), item.getType(), durationMs,item.getRunCount(),item.getAvgDuration());
         return item;
+    }
+
+    void printAggLog(){
+        String result="";
+        for ( GCLogAggregatorItem item:gcLogAggregatorItems) {
+            result=result+(String.format("\n\tname:%s\t|type:%s\t|total run count:%d\t|avg duration:%d ms\t|last duration:%s ms ", item.getName(), item.getType(), item.getRunCount(),item.getAvgDuration(), item.getLastDuratuionMs()));
+        }
+        logger.info(result);
+
     }
 }

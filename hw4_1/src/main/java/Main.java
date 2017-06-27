@@ -6,12 +6,12 @@ import GCMonitoring.GCMonitoring;
 public class Main {
 
     public static void main(String[] args)  {
-        GCMonitoring.installGCMonitoring();
+        GCMonitoring.install();
         runStand();
     }
 
     private static void runStand() {
-        MemoryLeakClass memoryLeakClass = new MemoryLeakClass(10_000_000,500_000);
+        MemoryLeakClass memoryLeakClass = new MemoryLeakClass(300_000,150_000);
         try {
             while (true) {
                 memoryLeakClass.run();

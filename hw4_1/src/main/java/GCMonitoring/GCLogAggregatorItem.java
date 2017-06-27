@@ -8,6 +8,7 @@ class GCLogAggregatorItem {
     private int runCount = 0;
     private long totalDurationMs = 0;
     private String type;
+    private long lastDuratuionMs = 0;
 
     public String getType() {
         return type;
@@ -26,10 +27,11 @@ class GCLogAggregatorItem {
         return runCount;
     }
 
-
     public long getTotalDurationMs() {
         return totalDurationMs;
     }
+
+    public long getLastDuratuionMs() {return lastDuratuionMs;}
 
     public long getAvgDuration() {
         return totalDurationMs / runCount;
@@ -37,6 +39,7 @@ class GCLogAggregatorItem {
 
     public void aggregateLog(long durationMs) {
         runCount++;
+        lastDuratuionMs =  durationMs;
         totalDurationMs += durationMs;
     }
 
