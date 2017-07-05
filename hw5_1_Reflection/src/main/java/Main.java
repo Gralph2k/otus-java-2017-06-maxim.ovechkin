@@ -1,4 +1,4 @@
-import TestFramework.TestFramework;
+import testFramework.TestFramework;
 
 /**
  * Created by maxim.ovechkin on 04.07.2017.

@@ -20,7 +20,7 @@ public class DummyClass2 {
     }
 
     @Test
-    public void test2_NoParameter2_FailedTest(){
+    public void test2_NoParameter2_FailException(){
         System.out.println(this.getClass().getName()+".test2_NoParameter2()");
         throw new ArithmeticException("Failed test");
     }

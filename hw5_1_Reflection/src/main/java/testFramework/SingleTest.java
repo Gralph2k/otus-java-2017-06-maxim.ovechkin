@@ -1,6 +1,4 @@
-package TestFramework;
-
-import sun.plugin2.message.Message;
+package testFramework;
 
 import java.lang.reflect.Method;
 

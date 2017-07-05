@@ -1,4 +1,4 @@
-package TestFramework;
+package testFramework;
 
 import common.ReflectionHelper;
 import org.slf4j.Logger;
@@ -50,7 +50,7 @@ public class TestFramework {
         logger.info(result);
     }
 
-    private static void runTests() {
+    protected static void runTests() {
         for (SingleTest test : tests.tests) {
             Object classObject = ReflectionHelper.instantiate(test.class_);
             runTestsSet(classObject, tests.beforeTests);
@@ -59,7 +59,7 @@ public class TestFramework {
         }
     }
 
-    private static void runTestsSet(Object classObject, Set<SingleTest> testsSet) {
+    protected static void runTestsSet(Object classObject, Set<SingleTest> testsSet) {
         for (SingleTest singleTest : testsSet) {
             if (singleTest.getClass_() == classObject.getClass()) {
                 runTest(classObject, singleTest);
@@ -67,7 +67,7 @@ public class TestFramework {
         }
     }
 
-    private static void runTest(Object classObject, SingleTest test) {
+    protected static boolean runTest(Object classObject, SingleTest test) {
         Method method = test.method;
         int paramCount = method.getParameterCount();
         if (paramCount == 0) {
@@ -80,13 +80,16 @@ public class TestFramework {
                 test.setMessage(e.getMessage() + "\n" + e.getStackTrace());
             }
         }
+        return test.getSucceseful();
     }
 
-    private static void fillMethodsAnnotatedWith(String packageName, Class class_, Class<? extends Annotation> annotation) {
+    protected static int fillMethodsAnnotatedWith(String packageName, Class class_, Class<? extends Annotation> annotation) {
         Set<Method> methods;
         methods = ReflectionHelper.getMethodsAnnotatedWith(class_, annotation);
+        int methodsCnt=0;
         for (Method method : methods) {
             if (method.getParameterCount() == 0) {
+                methodsCnt++;
                 if (annotation == annotations.Before.class) {
                     tests.beforeTests.add(new SingleTest(packageName, class_, method));
                 } else if (annotation == annotations.Test.class) {
@@ -98,9 +101,10 @@ public class TestFramework {
                 logger.debug("  ignore method {}.{} with non empty parameters", class_.getName(), method.getName());
             }
         }
+        return methodsCnt;
     }
 
-    private static void collectTests(String packageName) {
+    protected static void collectTests(String packageName) {
         Set<Class<? extends Object>> classesSet = ReflectionHelper.getClasses(packageName);
         for (Class class_ : classesSet) {
             fillMethodsAnnotatedWith(packageName, class_, annotations.Before.class);
