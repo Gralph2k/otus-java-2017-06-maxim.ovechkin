@@ -1,4 +1,5 @@
 import atm.Atm;
+import atm.currency.CurrencyName;
 
 /**
  * Created by maxim.ovechkin on 19.07.2017.
@@ -6,7 +7,14 @@ import atm.Atm;
 public class Main {
     public static void main(String[] args) {
         Atm atm = new Atm();
-        System.out.println(atm.getStatus());
+        atm.defaultAtmInit();
+        atm.printStatus();
+        atm.withdrawBanknotes(7800);
+        atm.printStatus();
+        atm.putBanknotes(CurrencyName.RUB,1000,1);
+        atm.printStatus();
+        atm.withdrawBanknotes(1_000_000);
+        atm.printStatus();
     }
 
 }

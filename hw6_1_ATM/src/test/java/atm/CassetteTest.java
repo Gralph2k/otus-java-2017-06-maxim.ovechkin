@@ -1,7 +1,7 @@
 package atm;
 
-import atm.Currency.CurrencyName;
-import atm.Currency.Currency;
+import atm.currency.CurrencyName;
+import atm.currency.Currency;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -15,7 +15,7 @@ public class CassetteTest {
         Cassette cassette = new Cassette(Currency.EUR,10, 100);
         assertEquals(cassette.getCurrency().getCurrencyName(), CurrencyName.EUR);
         assertEquals(cassette.getNomination(),10);
-        assertEquals(cassette.getAmount(),1000);
+        assertEquals(cassette.getBalance(),1000);
     }
 
     @Test(expected = AtmException.class)
@@ -32,33 +32,33 @@ public class CassetteTest {
     @Test(expected = AtmException.class)
     public void test_inputBanknotes_Oversize() {
         Cassette cassette = new Cassette(Currency.EUR,100, 100, 120);
-        cassette.inputBanknotes(200);
+        cassette.putBanknotes(200);
     }
     @Test
     public void test_inputBanknotes_OK() {
         Cassette cassette = new Cassette(Currency.EUR,100, 100, 200);
-        cassette.inputBanknotes(10);
+        cassette.putBanknotes(10);
         assertEquals(cassette.getBanknotesCount(),(100+10));
-        assertEquals(cassette.getAmount(),(100+10)*100);
+        assertEquals(cassette.getBalance(),(100+10)*100);
     }
     @Test
     public void test_getAmount_OK(){
         Cassette cassette = new Cassette(Currency.EUR,100, 100, 200);
-        assertEquals(cassette.getAmount(),100*100);
+        assertEquals(cassette.getBalance(),100*100);
     }
 
     @Test(expected = AtmException.class)
-    public void test_outputBanknotes_Oversize() {
+    public void test_withdrawBanknotes_Oversize() {
         Cassette cassette = new Cassette(Currency.EUR,100, 100, 120);
-        cassette.outputBanknotes(200);
+        cassette.withdrawBanknotes(200);
     }
 
     @Test
-    public void test_outputBanknotes_OK() {
+    public void test_withdrawBanknotes_OK() {
         Cassette cassette = new Cassette(Currency.EUR,100, 100, 200);
-        cassette.outputBanknotes(10);
+        cassette.withdrawBanknotes(10);
         assertEquals(cassette.getBanknotesCount(),90);
-        assertEquals(cassette.getAmount(),(100-10)*100);
+        assertEquals(cassette.getBalance(),(100-10)*100);
     }
 
 

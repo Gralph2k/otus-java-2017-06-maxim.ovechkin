@@ -1,4 +1,4 @@
-package atm.Currency;
+package atm.currency;
 
 /**
  * Created by maxim.ovechkin on 17.07.2017.

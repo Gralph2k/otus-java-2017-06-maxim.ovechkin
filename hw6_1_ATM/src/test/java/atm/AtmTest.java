@@ -1,9 +1,11 @@
 package atm;
 
-import atm.Currency.CurrencyName;
-import atm.Currency.Currency;
+import atm.currency.CurrencyName;
+import atm.currency.Currency;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +25,7 @@ public class AtmTest {
 
     @Test
     public void getAmount() throws Exception {
-        assertEquals(atm.getAmount(),660000);
+        assertEquals(atm.getBalance(),660000);
     }
 
     @Test
@@ -36,15 +38,57 @@ public class AtmTest {
         assertEquals(atm.getCassetesList().size(),4);
         assertEquals(atm.getCassetesList().get(0).getNomination(),100);
         assertEquals(atm.getCassetesList().get(0).getCurrency(),Currency.RUB);
-        assertEquals(atm.getCassetesList().get(0).getAmount(),100*100);
+        assertEquals(atm.getCassetesList().get(0).getBalance(),100*100);
     }
 
     @Test
-    public void inputBanknotes() throws Exception {
-        assertEquals(atm.inputBanknotes(CurrencyName.RUB,100,50),true);
-        assertEquals(atm.inputBanknotes(CurrencyName.EUR,100,100),false);
-        assertEquals(atm.inputBanknotes(CurrencyName.RUB,50,100),false);
-        assertEquals(atm.inputBanknotes(CurrencyName.RUB,100,1000),false);
+    public void putBanknotes() throws Exception {
+        assertEquals(atm.putBanknotes(CurrencyName.RUB,100,50),true);
+        assertEquals(atm.putBanknotes(CurrencyName.EUR,100,100),false);
+        assertEquals(atm.putBanknotes(CurrencyName.RUB,50,100),false);
+        assertEquals(atm.putBanknotes(CurrencyName.RUB,100,1000),false);
     }
+
+    @Test
+    public void withdrawBanknotesByCount() throws Exception {
+        assertEquals(atm.withdrawBanknotes(100,10),true); //Успешная попытка
+        assertEquals(atm.withdrawBanknotes(50,20),false); //Снимаю несуществующий номинал
+        assertEquals(atm.withdrawBanknotes(100,1000),false); //Недостаточное количество купюр
+    }
+
+    @Test
+    public void splitAmountToBanknotes() throws Exception {
+        HashMap<Integer,Integer> change = atm.splitAmountToBanknotes(6700);
+        assertEquals((int) change.get(5000),1);
+        assertEquals((int) change.get(1000),1);
+        assertEquals((int) change.get(500),1);
+        assertEquals((int) change.get(100),2);
+    }
+    @Test(expected = AtmException.class)
+    public void splitAmountToBanknotes_NonSplittableAmount() throws Exception {
+        HashMap<Integer,Integer> banknotes = atm.splitAmountToBanknotes(6750);
+    }
+
+    @Test
+    public void withdrawBanknotes_OK() throws Exception {
+        int balance = atm.getBalance();
+        boolean result= atm.withdrawBanknotes(6700);
+        assertEquals(atm.getBalance(),balance-6700);
+        assertTrue(result);
+    }
+
+    @Test
+    public void withdrawBanknotes_Illegal() throws Exception {
+        int balance = atm.getBalance();
+        boolean result= atm.withdrawBanknotes(6750);
+        assertEquals(atm.getBalance(),balance);
+        assertFalse(result);
+
+        balance = atm.getBalance();
+        result= atm.withdrawBanknotes(-100);
+        assertEquals(atm.getBalance(),balance);
+        assertFalse(result);
+    }
+
 
 }

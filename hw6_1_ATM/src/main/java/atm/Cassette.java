@@ -1,12 +1,14 @@
 package atm;
 
-import atm.Currency.Currency;
+import atm.currency.Currency;
+
+import static atm.helper.AtmHelper.numberFormat;
 
 /**
  * Created by maxim.ovechkin on 17.07.2017.
  */
-class Cassette {
-    Currency currency;
+class Cassette implements Comparable<Cassette> {
+    private Currency currency;
     private int nomination;
     private int banknotesCount;
     private int size;
@@ -31,25 +33,25 @@ class Cassette {
                 return;
             }
         }
-        throw new AtmException(String.format("%d - недопустимый номинал валюты %s", nomination, currency));
+        throw new AtmException(String.format("%s - недопустимый номинал валюты %s", numberFormat(nomination), currency));
     }
 
     private void setBanknotesCount(int banknotesCount){
         if (banknotesCount<0) {
-            throw new AtmException(String.format("Попытка установить отрицательное число банкнот %d",banknotesCount));
+            throw new AtmException(String.format("Попытка установить отрицательное число банкнот %s",numberFormat(banknotesCount)));
         }
-        inputBanknotes(banknotesCount);
+        putBanknotes(banknotesCount);
     }
 
-    public Currency getCurrency() {
+    Currency getCurrency() {
         return currency;
     }
 
-    public int getNomination() {
+    int getNomination() {
         return nomination;
     }
 
-    public int getBanknotesCount() {
+    int getBanknotesCount() {
         return banknotesCount;
     }
 
@@ -59,22 +61,35 @@ class Cassette {
 
     private int getFreeSpace() { return size-banknotesCount;}
 
-    public int getAmount(){
+    int getBalance(){
         return banknotesCount*nomination;
     }
 
-    public void inputBanknotes(int count){
+    void putBanknotes(int count){
         if (count>getFreeSpace()) {
-            throw new AtmException(String.format("Кассета заполнена, возможно добавить не более %d банкнот",getFreeSpace()));
+            throw new AtmException(String.format("Кассета заполнена, возможно добавить не более %s банкнот",numberFormat(getFreeSpace())));
         }
         banknotesCount+=count;
     }
 
-    public void outputBanknotes(int count){
-        if (count>getBanknotesCount()) {
-            throw new AtmException(String.format("Недостаточно банкнот в кассете, возможно получить не более %d шт",getBanknotesCount()));
+    void withdrawBanknotes(int count){
+        if (count<0) {
+            throw new AtmException(String.format("Попытка снять отрицательное количетво банкнот %s",numberFormat(count)));
+        }
+        if (count>banknotesCount) {
+            throw new AtmException(String.format("Недостаточное количетво банкнот. Попытка снять: %s. Доступное количество:%s",numberFormat(count),numberFormat(banknotesCount)));
         }
         banknotesCount-=count;
     }
 
+    @Override
+    public int compareTo(Cassette o) {
+        if (o.nomination>this.nomination) {
+            return -1;
+        } else if (o.nomination<this.nomination) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }
