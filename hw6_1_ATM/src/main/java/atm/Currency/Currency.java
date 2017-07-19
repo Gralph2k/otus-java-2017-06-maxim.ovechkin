@@ -8,23 +8,28 @@ import java.util.List;
  * Created by maxim.ovechkin on 17.07.2017.
  */
 public enum Currency {
-    RUB(Currencies.RUB,new ArrayList<>(Arrays.asList(10,50,100,500,1000,5000))),
-    EUR(Currencies.EUR,new ArrayList<>(Arrays.asList(5,10,20,50,100,200,500))),
-    USD(Currencies.USD,new ArrayList<>(Arrays.asList(1,2,5,10,20,50,100)))
+    RUB(CurrencyName.RUB,new ArrayList<>(Arrays.asList(10,50,100,500,1000,5000))),
+    EUR(CurrencyName.EUR,new ArrayList<>(Arrays.asList(5,10,20,50,100,200,500))),
+    USD(CurrencyName.USD,new ArrayList<>(Arrays.asList(1,2,5,10,20,50,100)))
     ;
     private List<Integer> nominations;
-    private Currencies currency;
+    private CurrencyName currencyName;
 
     public List<Integer> getNominations() {
         return nominations;
     }
 
-    public Currencies getCurrency() {
-        return currency;
+    public CurrencyName getCurrencyName() {
+        return currencyName;
     }
 
-    Currency(Currencies currency, List<Integer> nominations) {
+    Currency(CurrencyName currencyName, List<Integer> nominations) {
         this.nominations = nominations;
-        this.currency = currency;
+        this.currencyName = currencyName;
+    }
+
+    @Override
+    public String toString(){
+        return currencyName.name();
     }
 }
