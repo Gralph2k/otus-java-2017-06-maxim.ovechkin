@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] args) {
         for (String line:readCSV("import.csv")) {
             System.out.println(line);
-        };
+        }
     }
 
     public static List<String> readCSV(String path) {
