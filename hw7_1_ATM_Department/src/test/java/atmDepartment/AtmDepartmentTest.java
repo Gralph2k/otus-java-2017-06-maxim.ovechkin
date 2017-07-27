@@ -45,11 +45,16 @@ public class AtmDepartmentTest {
     public void test_Memento() throws Exception {
         Map<CurrencyName, Integer> balance = atmDepartment.getBalance(); //Начальное значение
         assertEquals(balance.get(CurrencyName.RUB),Integer.valueOf(660000));
+        assertEquals(balance.get(CurrencyName.USD),Integer.valueOf(8500));
         atmDepartment.getAtmList().get(0).withdrawBanknotes(100000);
+        atmDepartment.getAtmList().get(1).withdrawBanknotes(1000);
         balance = atmDepartment.getBalance();
         assertEquals(balance.get(CurrencyName.RUB),Integer.valueOf(560000));//Сняли деньги
+        assertEquals(balance.get(CurrencyName.USD),Integer.valueOf(7500));//Сняли деньги
+
         atmDepartment.restoreAtmsState();
         balance = atmDepartment.getBalance();
         assertEquals(balance.get(CurrencyName.RUB),Integer.valueOf(660000));//Восстановились до начального значения
+        assertEquals(balance.get(CurrencyName.USD),Integer.valueOf(8500));
     }
 }
