@@ -1,7 +1,11 @@
-package atm;
+package atmDepartment.atm;
 
-import atm.currency.CurrencyName;
-import atm.currency.Currency;
+import atmDepartment.atm.Atm;
+import atmDepartment.atm.AtmException;
+import atmDepartment.atm.WithdrawStrategy_BigFirst;
+import atmDepartment.atm.WithdrawStrategy_WithCharge;
+import atmDepartment.atm.currency.CurrencyName;
+import atmDepartment.atm.currency.Currency;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,13 +61,29 @@ public class AtmTest {
     }
 
     @Test
-    public void splitAmountToBanknotes() throws Exception {
-        HashMap<Integer,Integer> change = atm.splitAmountToBanknotes(6700);
+    public void splitAmountToBanknotesBigFirst() throws Exception {
+        final int AMOUNT=6700;
+        atm.setWithdrawStrategy(new WithdrawStrategy_BigFirst());
+        HashMap<Integer,Integer> change = atm.splitAmountToBanknotes(AMOUNT);
         assertEquals((int) change.get(5000),1);
         assertEquals((int) change.get(1000),1);
         assertEquals((int) change.get(500),1);
         assertEquals((int) change.get(100),2);
+        atm.withdrawBanknotes(AMOUNT);
     }
+
+    @Test
+    public void splitAmountToBanknotesWithCharge() throws Exception {
+        final int AMOUNT=6700;
+        atm.setWithdrawStrategy(new WithdrawStrategy_WithCharge());
+        HashMap<Integer,Integer> change = atm.splitAmountToBanknotes(AMOUNT);
+        assertFalse(change.containsKey(5000));
+        assertEquals((int) change.get(1000),6);
+        assertEquals((int) change.get(500),1);
+        assertEquals((int) change.get(100),2);
+        atm.withdrawBanknotes(AMOUNT);
+    }
+
     @Test(expected = AtmException.class)
     public void splitAmountToBanknotes_NonSplittableAmount() throws Exception {
         HashMap<Integer,Integer> banknotes = atm.splitAmountToBanknotes(6750);
@@ -89,6 +109,8 @@ public class AtmTest {
         assertEquals(atm.getBalance(),balance);
         assertFalse(result);
     }
+
+
 
 
 }

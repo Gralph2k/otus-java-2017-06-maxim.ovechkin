@@ -1,7 +1,9 @@
-package atm;
+package atmDepartment.atm;
 
-import atm.currency.CurrencyName;
-import atm.currency.Currency;
+import atmDepartment.atm.AtmException;
+import atmDepartment.atm.Cassette;
+import atmDepartment.atm.currency.CurrencyName;
+import atmDepartment.atm.currency.Currency;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,7 +14,7 @@ import static org.junit.Assert.*;
 public class CassetteTest {
     @Test
     public void test_Constructor_OK() throws Exception {
-        Cassette cassette = new Cassette(Currency.EUR,10, 100);
+        Cassette cassette = new Cassette(Currency.EUR,10, 100,200);
         assertEquals(cassette.getCurrency().getCurrencyName(), CurrencyName.EUR);
         assertEquals(cassette.getNomination(),10);
         assertEquals(cassette.getBalance(),1000);
@@ -20,12 +22,12 @@ public class CassetteTest {
 
     @Test(expected = AtmException.class)
     public void test_Constructor_IllegalNomination() {
-        Cassette cassette = new Cassette(Currency.EUR,105, 100);
+        Cassette cassette = new Cassette(Currency.EUR,105, 100,200);
     }
 
     @Test(expected = AtmException.class)
     public void test_Constructor_IllegalBanknotesCount() {
-        Cassette cassette = new Cassette(Currency.EUR,100, -100);
+        Cassette cassette = new Cassette(Currency.EUR,100, -100,200);
     }
 
 

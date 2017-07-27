@@ -1,26 +1,28 @@
-package atm;
+package atmDepartment.atm;
 
-import atm.currency.Currency;
-import atm.currency.CurrencyName;
+import atmDepartment.atm.currency.CurrencyName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static atm.helper.AtmHelper.numberFormat;
+import static atmDepartment.atm.helper.AtmHelper.numberFormat;
 
 
 /**
  * Created by maxim.ovechkin on 17.07.2017.
  */
-public class Atm {
+@SuppressWarnings({"DefaultFileTemplate", "CanBeFinal"})
+public class Atm implements WithdrawStrategy{
     private static Logger logger = LoggerFactory.getLogger(Atm.class);
-    private static final Currency DEFAULT_CURRENCY = Currency.RUB;
-    private Currency currency;
+    private static final atmDepartment.atm.currency.Currency DEFAULT_CURRENCY = atmDepartment.atm.currency.Currency.RUB;
+    private atmDepartment.atm.currency.Currency currency;
     private List<Cassette> cassetesList = new ArrayList<>();
+    private WithdrawStrategy withdrawStrategy;
 
-    public Atm(Currency currency) {
+    public Atm(atmDepartment.atm.currency.Currency currency) {
         this.currency = currency;
+        this.withdrawStrategy=new WithdrawStrategy_BigFirst();
     }
 
     public Atm() {
@@ -29,13 +31,7 @@ public class Atm {
 
     public final void loadCassette(int nomination, int banknotesCount, int size) {
         cassetesList.add(new Cassette(currency, nomination, banknotesCount, size));
-        Collections.sort(cassetesList,
-                new Comparator<Cassette>() {
-                    public int compare(Cassette o1, Cassette o2) {
-                        return o1.compareTo(o2);
-                    }
-                }
-        );
+        Collections.sort(cassetesList,(o1, o2) -> o1.compareTo(o2));
     }
 
     public void defaultAtmInit() {
@@ -55,7 +51,7 @@ public class Atm {
         return balance;
     }
 
-    public Currency getCurrency() {
+    public atmDepartment.atm.currency.Currency getCurrency() {
         return currency;
     }
 
@@ -133,33 +129,32 @@ public class Atm {
     }
 
     HashMap<Integer, Integer> splitAmountToBanknotes(int amount) {
-        int storeAmount = amount;
-        HashMap<Integer, Integer> result = new HashMap<>();
-        for (int i = cassetesList.size() - 1; i >= 0; i--) {
-            Cassette cassette = cassetesList.get(i);
-            int nomination = cassette.getNomination();
-            if (nomination <= amount) {
-                int count = Math.floorDiv(amount, nomination);
-                count = Math.min(count, cassette.getBanknotesCount());
-                if (count > 0) {
-                    result.put(nomination, count);
-                    amount -= count * nomination;
-                }
-            }
-            if (amount == 0) {
-                break;
-            }
-        }
-        if (amount == 0) {
-            return result;
-        } else if (amount > 0) {
-            throw new AtmException(String.format("Имеющихся банкнот недостаточно для выдачи требуемой суммы %s %s", numberFormat(storeAmount), getCurrency()));
-        } else
-            throw new AtmException("Something goes wrong");
+       return splitAmountToBanknotes(amount,getCurrency(),getCassetesList());
     }
 
     public void printStatus() {
         System.out.println(getStatus());
     }
 
+    @SuppressWarnings("unused")
+    public WithdrawStrategy getWithdrawStrategy() {
+        return withdrawStrategy;
+    }
+
+    public void setWithdrawStrategy(WithdrawStrategy withdrawStrategy) {
+        this.withdrawStrategy = withdrawStrategy;
+        logger.info("Задана стратегия выдачи: "+getWithdrawStrategyName());
+    }
+
+
+    public HashMap<Integer, Integer> splitAmountToBanknotes(int amount, atmDepartment.atm.currency.Currency currency, List<Cassette> cassetesList) {
+        if (withdrawStrategy==null){
+            throw new AtmException("Не задана стратегия выдачи банкнот");
+        }
+        return withdrawStrategy.splitAmountToBanknotes(amount,currency,cassetesList);
+    }
+
+    public String getWithdrawStrategyName() {
+        return withdrawStrategy.getWithdrawStrategyName();
+    }
 }

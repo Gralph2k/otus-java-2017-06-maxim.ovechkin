@@ -1,29 +1,23 @@
-package atm;
+package atmDepartment.atm;
 
-import atm.currency.Currency;
+import atmDepartment.atm.currency.Currency;
 
-import static atm.helper.AtmHelper.numberFormat;
+import static atmDepartment.atm.helper.AtmHelper.numberFormat;
 
 /**
  * Created by maxim.ovechkin on 17.07.2017.
  */
-class Cassette implements Comparable<Cassette> {
+public class Cassette implements Comparable<Cassette> {
     private Currency currency;
     private int nomination;
     private int banknotesCount;
     private int size;
-    private static final int DEFAULT_CASSETTE_SIZE = 200;
 
-
-    Cassette(Currency currency, int nomination, int banknotesCount, int size){
+    public Cassette(Currency currency, int nomination, int banknotesCount, int size){
         this.currency=currency;
         this.size=size;
         setNomination(nomination);
         setBanknotesCount(banknotesCount);
-    }
-
-    Cassette(Currency currency, int nomination, int banknotesCount){
-        this(currency,nomination,banknotesCount,DEFAULT_CASSETTE_SIZE);
     }
 
     private void setNomination(int nomination){

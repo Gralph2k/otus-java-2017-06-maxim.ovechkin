@@ -1,7 +1,10 @@
-package atm.helper;
+package atmDepartment.atm.helper;
 
+
+import atmDepartment.atm.Cassette;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * Created by maxim.ovechkin on 19.07.2017.
@@ -14,4 +17,7 @@ public class AtmHelper {
         DecimalFormat myFormatter = new DecimalFormat(pattern);
         return myFormatter.format(value);
     }
+
+
+
 }

@@ -1,4 +1,4 @@
-package atm.currency;
+package atmDepartment.atm.currency;
 
 import java.util.ArrayList;
 import java.util.Arrays;

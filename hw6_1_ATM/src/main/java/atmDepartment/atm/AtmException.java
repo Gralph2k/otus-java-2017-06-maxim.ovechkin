@@ -1,4 +1,4 @@
-package atm;
+package atmDepartment.atm;
 
 /**
  * Created by maxim.ovechkin on 19.07.2017.
